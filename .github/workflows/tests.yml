@@ -17,4 +17,9 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.test.txt
       - name: Run tests
-        run: pytest --cov=custom_components.obs_websocket
+        run: pytest --cov=custom_components.obs_websocket --cov-report=xml
+      - name: Upload coverage
+        uses: codecov/codecov-action@v5
+        with:
+          files: coverage.xml
+          fail_ci_if_error: false
