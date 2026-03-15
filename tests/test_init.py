@@ -11,16 +11,14 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 from custom_components.obs_websocket import OBSRuntimeData
 from custom_components.obs_websocket.const import DOMAIN
 
-from .conftest import MOCK_CONFIG, MOCK_HOST, MOCK_PORT, make_stream_status, make_service_settings
+from .conftest import MOCK_CONFIG, MOCK_HOST, MOCK_PORT, make_service_settings, make_stream_status
 
 
 def _make_mock_obs(req_client: MagicMock) -> MagicMock:
     """Create a mock obsws_python module."""
     mock_obs = MagicMock()
     mock_obs.ReqClient.return_value = req_client
-    mock_obs.EventClient = type(
-        "EventClient", (), {"__init__": lambda self, **kw: None}
-    )
+    mock_obs.EventClient = type("EventClient", (), {"__init__": lambda self, **kw: None})
     return mock_obs
 
 
@@ -31,9 +29,7 @@ def _make_req_client(
 ) -> MagicMock:
     """Create a mock ReqClient with configurable state."""
     client = MagicMock()
-    client.get_stream_status.return_value = make_stream_status(
-        active=active, reconnecting=reconnecting
-    )
+    client.get_stream_status.return_value = make_stream_status(active=active, reconnecting=reconnecting)
     client.get_stream_service_settings.return_value = make_service_settings()
     client.disconnect.return_value = None
     return client
@@ -74,9 +70,7 @@ async def test_setup_entry_connection_failure(hass: HomeAssistant) -> None:
 
     mock_obs = MagicMock()
     mock_obs.ReqClient.side_effect = ConnectionRefusedError("Connection refused")
-    mock_obs.EventClient = type(
-        "EventClient", (), {"__init__": lambda self, **kw: None}
-    )
+    mock_obs.EventClient = type("EventClient", (), {"__init__": lambda self, **kw: None})
 
     with patch.dict("sys.modules", {"obsws_python": mock_obs}):
         await hass.config_entries.async_setup(entry.entry_id)
@@ -132,9 +126,7 @@ async def test_coordinator_update_success(hass: HomeAssistant) -> None:
     assert coordinator.data["stream_status"].output_active is True
 
 
-async def test_coordinator_update_failure_logs_warning(
-    hass: HomeAssistant, caplog
-) -> None:
+async def test_coordinator_update_failure_logs_warning(hass: HomeAssistant, caplog) -> None:
     """Test coordinator logs warning when connection drops."""
     entry = MockConfigEntry(
         domain=DOMAIN,
@@ -161,9 +153,7 @@ async def test_coordinator_update_failure_logs_warning(
     assert "is unavailable" in caplog.text
 
 
-async def test_coordinator_recovery_logs_info(
-    hass: HomeAssistant, caplog
-) -> None:
+async def test_coordinator_recovery_logs_info(hass: HomeAssistant, caplog) -> None:
     """Test coordinator logs info when connection recovers."""
     entry = MockConfigEntry(
         domain=DOMAIN,

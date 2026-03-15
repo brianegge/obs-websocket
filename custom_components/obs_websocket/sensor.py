@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import Any, ClassVar
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from homeassistant.const import EntityCategory
@@ -12,8 +12,8 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN
 from . import OBSConfigEntry, OBSCoordinator
+from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -54,7 +54,7 @@ class OBSStreamStatusSensor(OBSSensorBase):
     """Sensor showing OBS stream status."""
 
     _attr_device_class = SensorDeviceClass.ENUM
-    _attr_options = ["idle", "streaming", "reconnecting"]
+    _attr_options: ClassVar[list[str]] = ["idle", "streaming", "reconnecting"]
     _attr_translation_key = "stream_status"
 
     def __init__(self, coordinator: OBSCoordinator, entry: OBSConfigEntry) -> None:

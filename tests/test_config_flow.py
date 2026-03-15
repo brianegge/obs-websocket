@@ -12,14 +12,12 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.obs_websocket.const import DOMAIN
 
-from .conftest import MOCK_CONFIG, MOCK_HOST, MOCK_PORT, MOCK_PASSWORD
+from .conftest import MOCK_CONFIG, MOCK_HOST, MOCK_PASSWORD, MOCK_PORT
 
 
 async def test_user_flow_shows_form(hass: HomeAssistant) -> None:
     """Test that the user flow shows a form initially."""
-    result = await hass.config_entries.flow.async_init(
-        DOMAIN, context={"source": config_entries.SOURCE_USER}
-    )
+    result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": config_entries.SOURCE_USER})
     assert result["type"] is FlowResultType.FORM
     assert result["step_id"] == "user"
     assert result["errors"] == {}
@@ -27,9 +25,7 @@ async def test_user_flow_shows_form(hass: HomeAssistant) -> None:
 
 async def test_user_flow_success(hass: HomeAssistant) -> None:
     """Test successful user config flow creates entry."""
-    result = await hass.config_entries.flow.async_init(
-        DOMAIN, context={"source": config_entries.SOURCE_USER}
-    )
+    result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": config_entries.SOURCE_USER})
 
     with patch(
         "custom_components.obs_websocket.config_flow._test_connection",
@@ -47,9 +43,7 @@ async def test_user_flow_success(hass: HomeAssistant) -> None:
 
 async def test_user_flow_cannot_connect(hass: HomeAssistant) -> None:
     """Test user config flow with connection failure shows error."""
-    result = await hass.config_entries.flow.async_init(
-        DOMAIN, context={"source": config_entries.SOURCE_USER}
-    )
+    result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": config_entries.SOURCE_USER})
 
     with patch(
         "custom_components.obs_websocket.config_flow._test_connection",
@@ -64,13 +58,9 @@ async def test_user_flow_cannot_connect(hass: HomeAssistant) -> None:
     assert result["errors"] == {"base": "cannot_connect"}
 
 
-async def test_user_flow_already_configured(
-    hass: HomeAssistant, mock_config_entry: MockConfigEntry
-) -> None:
+async def test_user_flow_already_configured(hass: HomeAssistant, mock_config_entry: MockConfigEntry) -> None:
     """Test user flow aborts when already configured."""
-    result = await hass.config_entries.flow.async_init(
-        DOMAIN, context={"source": config_entries.SOURCE_USER}
-    )
+    result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": config_entries.SOURCE_USER})
 
     with patch(
         "custom_components.obs_websocket.config_flow._test_connection",
@@ -84,9 +74,7 @@ async def test_user_flow_already_configured(
     assert result["reason"] == "already_configured"
 
 
-async def test_reauth_flow_success(
-    hass: HomeAssistant, mock_config_entry: MockConfigEntry
-) -> None:
+async def test_reauth_flow_success(hass: HomeAssistant, mock_config_entry: MockConfigEntry) -> None:
     """Test successful reauth flow updates password."""
     result = await mock_config_entry.start_reauth_flow(hass)
     assert result["type"] is FlowResultType.FORM
@@ -106,9 +94,7 @@ async def test_reauth_flow_success(
     mock_test.assert_called_once_with(hass, MOCK_HOST, MOCK_PORT, "newpass")
 
 
-async def test_reauth_flow_cannot_connect(
-    hass: HomeAssistant, mock_config_entry: MockConfigEntry
-) -> None:
+async def test_reauth_flow_cannot_connect(hass: HomeAssistant, mock_config_entry: MockConfigEntry) -> None:
     """Test reauth flow with connection failure shows error."""
     result = await mock_config_entry.start_reauth_flow(hass)
 
@@ -125,9 +111,7 @@ async def test_reauth_flow_cannot_connect(
     assert result["errors"] == {"base": "cannot_connect"}
 
 
-async def test_reconfigure_flow_success(
-    hass: HomeAssistant, mock_config_entry: MockConfigEntry
-) -> None:
+async def test_reconfigure_flow_success(hass: HomeAssistant, mock_config_entry: MockConfigEntry) -> None:
     """Test successful reconfigure flow updates all fields."""
     result = await mock_config_entry.start_reconfigure_flow(hass)
     assert result["type"] is FlowResultType.FORM
@@ -151,9 +135,7 @@ async def test_reconfigure_flow_success(
     mock_test.assert_called_once_with(hass, "10.0.0.50", 4456, "newpass")
 
 
-async def test_reconfigure_flow_cannot_connect(
-    hass: HomeAssistant, mock_config_entry: MockConfigEntry
-) -> None:
+async def test_reconfigure_flow_cannot_connect(hass: HomeAssistant, mock_config_entry: MockConfigEntry) -> None:
     """Test reconfigure flow with connection failure shows error."""
     result = await mock_config_entry.start_reconfigure_flow(hass)
 
@@ -172,9 +154,7 @@ async def test_reconfigure_flow_cannot_connect(
 
 async def test_user_flow_no_password(hass: HomeAssistant) -> None:
     """Test user flow without password."""
-    result = await hass.config_entries.flow.async_init(
-        DOMAIN, context={"source": config_entries.SOURCE_USER}
-    )
+    result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": config_entries.SOURCE_USER})
 
     config_no_pass = {"host": MOCK_HOST, "port": MOCK_PORT, "password": ""}
 
@@ -203,9 +183,7 @@ async def test_test_connection_with_password(hass: HomeAssistant) -> None:
 
         await _test_connection(hass, MOCK_HOST, MOCK_PORT, MOCK_PASSWORD)
 
-    mock_obs.ReqClient.assert_called_once_with(
-        host=MOCK_HOST, port=MOCK_PORT, timeout=5, password=MOCK_PASSWORD
-    )
+    mock_obs.ReqClient.assert_called_once_with(host=MOCK_HOST, port=MOCK_PORT, timeout=5, password=MOCK_PASSWORD)
     mock_client.get_version.assert_called_once()
     mock_client.disconnect.assert_called_once()
 
@@ -222,9 +200,7 @@ async def test_test_connection_without_password(hass: HomeAssistant) -> None:
 
         await _test_connection(hass, MOCK_HOST, MOCK_PORT, "")
 
-    mock_obs.ReqClient.assert_called_once_with(
-        host=MOCK_HOST, port=MOCK_PORT, timeout=5
-    )
+    mock_obs.ReqClient.assert_called_once_with(host=MOCK_HOST, port=MOCK_PORT, timeout=5)
 
 
 async def test_test_connection_failure(hass: HomeAssistant) -> None:
@@ -237,6 +213,6 @@ async def test_test_connection_failure(hass: HomeAssistant) -> None:
 
         try:
             await _test_connection(hass, MOCK_HOST, MOCK_PORT, MOCK_PASSWORD)
-            assert False, "Should have raised"
+            raise AssertionError("Should have raised")
         except ConnectionRefusedError:
             pass
