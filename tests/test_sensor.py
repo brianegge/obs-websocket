@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
 
+import pytest
 from homeassistant.const import STATE_UNAVAILABLE, EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
@@ -112,7 +113,7 @@ async def test_stream_status_streaming(hass: HomeAssistant) -> None:
     assert state.attributes["output_timecode"] == "00:01:00.000"
     assert state.attributes["output_skipped_frames"] == 5
     assert state.attributes["output_total_frames"] == 3600
-    assert state.attributes["output_congestion"] == 0.1
+    assert state.attributes["output_congestion"] == pytest.approx(0.1)
 
 
 async def test_stream_status_reconnecting(hass: HomeAssistant) -> None:
