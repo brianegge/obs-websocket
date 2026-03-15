@@ -31,24 +31,11 @@ jobs:
           new_version="${major}.${minor}.$((patch + 1))"
           echo "version=$new_version" >> "$GITHUB_OUTPUT"
 
-      - name: Update manifest.json
+      - name: Update manifest for release zip
         run: |
           jq --arg v "${{ steps.bump.outputs.version }}" '.version = $v' \
             custom_components/obs_websocket/manifest.json > tmp.json
           mv tmp.json custom_components/obs_websocket/manifest.json
-
-      - name: Commit version bump
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add custom_components/obs_websocket/manifest.json
-          git commit -m "Bump version to ${{ steps.bump.outputs.version }}"
-          git push
-
-      - name: Create and push tag
-        run: |
-          git tag "v${{ steps.bump.outputs.version }}"
-          git push origin "v${{ steps.bump.outputs.version }}"
 
       - name: Create release zip
         run: |
@@ -62,3 +49,4 @@ jobs:
           name: "v${{ steps.bump.outputs.version }}"
           files: obs-studio.zip
           generate_release_notes: true
+          target_commitish: ${{ github.sha }}
