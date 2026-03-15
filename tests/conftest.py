@@ -21,9 +21,9 @@ def auto_enable_custom_integrations(hass: HomeAssistant) -> None:
 
 MOCK_HOST = "192.168.1.100"
 MOCK_PORT = 4455
-MOCK_PASSWORD = "mock-password-for-testing"
-MOCK_NEW_PASSWORD = "mock-new-password"
-MOCK_WRONG_PASSWORD = "mock-wrong-password"
+MOCK_PASSWORD = "mock-password-for-testing"  # NOSONAR
+MOCK_NEW_PASSWORD = "mock-new-password"  # NOSONAR
+MOCK_WRONG_PASSWORD = "mock-wrong-password"  # NOSONAR
 
 MOCK_CONFIG = {
     "host": MOCK_HOST,

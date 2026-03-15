@@ -85,13 +85,13 @@ async def test_reauth_flow_success(hass: HomeAssistant, mock_config_entry: MockC
     ) as mock_test:
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"],
-            user_input={"password": MOCK_NEW_PASSWORD},
+            user_input={"password": MOCK_NEW_PASSWORD},  # NOSONAR
         )
 
     assert result["type"] is FlowResultType.ABORT
     assert result["reason"] == "reauth_successful"
-    assert mock_config_entry.data["password"] == MOCK_NEW_PASSWORD
-    mock_test.assert_called_once_with(hass, MOCK_HOST, MOCK_PORT, MOCK_NEW_PASSWORD)
+    assert mock_config_entry.data["password"] == MOCK_NEW_PASSWORD  # NOSONAR
+    mock_test.assert_called_once_with(hass, MOCK_HOST, MOCK_PORT, MOCK_NEW_PASSWORD)  # NOSONAR
 
 
 async def test_reauth_flow_cannot_connect(hass: HomeAssistant, mock_config_entry: MockConfigEntry) -> None:
@@ -104,7 +104,7 @@ async def test_reauth_flow_cannot_connect(hass: HomeAssistant, mock_config_entry
     ):
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"],
-            user_input={"password": MOCK_WRONG_PASSWORD},
+            user_input={"password": MOCK_WRONG_PASSWORD},  # NOSONAR
         )
 
     assert result["type"] is FlowResultType.FORM
