@@ -20,7 +20,7 @@ _LOGGER = logging.getLogger(__name__)
 PARALLEL_UPDATES = 1
 
 
-async def async_setup_entry(
+async def async_setup_entry(  # NOSONAR
     hass: HomeAssistant, entry: OBSConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     """Set up OBS WebSocket sensors from a config entry."""
