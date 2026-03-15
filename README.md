@@ -1,5 +1,7 @@
 # OBS WebSocket Integration for Home Assistant
 
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
+
 [OBS Studio](https://obsproject.com/) is a free, open-source application for video recording and live streaming. It is widely used by content creators, gamers, and professionals for streaming to platforms such as Twitch, YouTube, and Facebook Live.
 
 This custom Home Assistant integration connects to OBS Studio via the [WebSocket v5 protocol](https://github.com/obsproject/obs-websocket), exposing real-time stream status and service configuration as sensors. It uses a persistent connection with event-driven updates for near-instant state changes.
@@ -12,6 +14,16 @@ This custom Home Assistant integration connects to OBS Studio via the [WebSocket
 - Network connectivity between Home Assistant and the OBS machine
 
 ## Installation
+
+### HACS (recommended)
+
+1. Open HACS in Home Assistant
+2. Go to **Integrations** > three-dot menu > **Custom repositories**
+3. Add this repository URL and select **Integration** as the category
+4. Search for and install **OBS WebSocket**
+5. Restart Home Assistant
+
+### Manual
 
 1. Copy the `obs_websocket` folder to your Home Assistant `custom_components` directory:
 
