@@ -6,11 +6,9 @@ from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 import pytest
-
+from homeassistant import loader
 from homeassistant.core import HomeAssistant
 from pytest_homeassistant_custom_component.common import MockConfigEntry
-
-from homeassistant import loader
 
 from custom_components.obs_websocket.const import DOMAIN
 
@@ -19,6 +17,7 @@ from custom_components.obs_websocket.const import DOMAIN
 def auto_enable_custom_integrations(hass: HomeAssistant) -> None:
     """Enable custom integrations in all tests."""
     hass.data.pop(loader.DATA_CUSTOM_COMPONENTS)
+
 
 MOCK_HOST = "192.168.1.100"
 MOCK_PORT = 4455
@@ -63,8 +62,7 @@ def make_service_settings(
     """Create a mock service settings response."""
     return SimpleNamespace(
         stream_service_type=service_type,
-        stream_service_settings=settings
-        or {"server": "rtmp://live.twitch.tv/app", "key": "live_abc123"},
+        stream_service_settings=settings or {"server": "rtmp://live.twitch.tv/app", "key": "live_abc123"},
     )
 
 
@@ -98,9 +96,7 @@ def mock_obsws(mock_req_client: MagicMock):
     mock_obs = MagicMock()
     mock_obs.ReqClient.return_value = mock_req_client
     # EventClient is subclassed, so provide a base class
-    mock_obs.EventClient = type(
-        "EventClient", (), {"__init__": lambda self, **kw: None}
-    )
+    mock_obs.EventClient = type("EventClient", (), {"__init__": lambda self, **kw: None})
 
     with patch.dict("sys.modules", {"obsws_python": mock_obs}):
         yield mock_obs

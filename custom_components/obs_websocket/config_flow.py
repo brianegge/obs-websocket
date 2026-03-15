@@ -5,7 +5,6 @@ from __future__ import annotations
 from typing import Any
 
 import voluptuous as vol
-
 from homeassistant import config_entries
 from homeassistant.config_entries import ConfigFlowResult
 from homeassistant.core import HomeAssistant
@@ -33,9 +32,7 @@ class OBSWebSocketConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
 
-    async def async_step_user(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
+    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         """Handle the initial step."""
         errors: dict[str, str] = {}
 
@@ -68,15 +65,11 @@ class OBSWebSocketConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    async def async_step_reauth(
-        self, entry_data: dict[str, Any]
-    ) -> ConfigFlowResult:
+    async def async_step_reauth(self, entry_data: dict[str, Any]) -> ConfigFlowResult:
         """Handle reauthorization when password changes."""
         return await self.async_step_reauth_confirm()
 
-    async def async_step_reauth_confirm(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
+    async def async_step_reauth_confirm(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         """Handle reauth confirmation."""
         errors: dict[str, str] = {}
         reauth_entry = self._get_reauth_entry()
@@ -108,9 +101,7 @@ class OBSWebSocketConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    async def async_step_reconfigure(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
+    async def async_step_reconfigure(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         """Handle reconfiguration."""
         errors: dict[str, str] = {}
         reconfigure_entry = self._get_reconfigure_entry()
@@ -136,15 +127,9 @@ class OBSWebSocketConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="reconfigure",
             data_schema=vol.Schema(
                 {
-                    vol.Required(
-                        "host", default=reconfigure_entry.data.get("host", DEFAULT_HOST)
-                    ): str,
-                    vol.Required(
-                        "port", default=reconfigure_entry.data.get("port", DEFAULT_PORT)
-                    ): int,
-                    vol.Optional(
-                        "password", default=reconfigure_entry.data.get("password", "")
-                    ): str,
+                    vol.Required("host", default=reconfigure_entry.data.get("host", DEFAULT_HOST)): str,
+                    vol.Required("port", default=reconfigure_entry.data.get("port", DEFAULT_PORT)): int,
+                    vol.Optional("password", default=reconfigure_entry.data.get("password", "")): str,
                 }
             ),
             errors=errors,

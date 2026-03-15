@@ -4,15 +4,15 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
 
-from homeassistant.const import EntityCategory, STATE_UNAVAILABLE
+from homeassistant.const import STATE_UNAVAILABLE, EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.obs_websocket.const import DOMAIN
-from custom_components.obs_websocket.sensor import OBSStreamStatusSensor, OBSStreamServiceSensor
+from custom_components.obs_websocket.sensor import OBSStreamServiceSensor, OBSStreamStatusSensor
 
-from .conftest import MOCK_CONFIG, MOCK_HOST, MOCK_PORT, make_stream_status, make_service_settings
+from .conftest import MOCK_CONFIG, MOCK_HOST, MOCK_PORT, make_service_settings, make_stream_status
 
 SERVICE_ENTITY_ID = "sensor.obs_studio_192_168_1_100_none_2"
 STATUS_ENTITY_ID = "sensor.obs_studio_192_168_1_100_none"
@@ -22,9 +22,7 @@ def _make_mock_obs(req_client: MagicMock) -> MagicMock:
     """Create a mock obsws_python module."""
     mock_obs = MagicMock()
     mock_obs.ReqClient.return_value = req_client
-    mock_obs.EventClient = type(
-        "EventClient", (), {"__init__": lambda self, **kw: None}
-    )
+    mock_obs.EventClient = type("EventClient", (), {"__init__": lambda self, **kw: None})
     return mock_obs
 
 

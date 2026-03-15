@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import asyncio
-from dataclasses import dataclass
+import contextlib
 import logging
+from dataclasses import dataclass
 from datetime import timedelta
 from typing import Any
 
@@ -32,9 +33,7 @@ _LOGGER = logging.getLogger(__name__)
 class OBSConnection:
     """Persistent OBS WebSocket connection with event-driven updates."""
 
-    def __init__(
-        self, hass: HomeAssistant, host: str, port: int, password: str
-    ) -> None:
+    def __init__(self, hass: HomeAssistant, host: str, port: int, password: str) -> None:
         self.hass = hass
         self.host = host
         self._port = port
@@ -99,10 +98,8 @@ class OBSConnection:
         def _disconnect() -> None:
             for client in (self._event_client, self._req_client):
                 if client:
-                    try:
+                    with contextlib.suppress(Exception):
                         client.disconnect()
-                    except Exception:
-                        pass
             self._event_client = None
             self._req_client = None
 
@@ -112,9 +109,7 @@ class OBSConnection:
 class OBSCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """Coordinator with persistent connection and event-driven refresh."""
 
-    def __init__(
-        self, hass: HomeAssistant, connection: OBSConnection
-    ) -> None:
+    def __init__(self, hass: HomeAssistant, connection: OBSConnection) -> None:
         super().__init__(
             hass,
             _LOGGER,
@@ -148,9 +143,7 @@ class OBSCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             ) from err
 
         if not self._was_available:
-            _LOGGER.info(
-                "OBS WebSocket (%s) is available again", self.connection.host
-            )
+            _LOGGER.info("OBS WebSocket (%s) is available again", self.connection.host)
             self._was_available = True
         return data
 

@@ -12,9 +12,7 @@ from . import OBSConfigEntry
 TO_REDACT: set[str] = {"password", "key"}
 
 
-async def async_get_config_entry_diagnostics(
-    hass: HomeAssistant, entry: OBSConfigEntry
-) -> dict[str, Any]:
+async def async_get_config_entry_diagnostics(hass: HomeAssistant, entry: OBSConfigEntry) -> dict[str, Any]:
     """Return diagnostics for a config entry."""
     coordinator = entry.runtime_data.coordinator
     connection = entry.runtime_data.connection
