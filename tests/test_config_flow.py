@@ -12,7 +12,7 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.obs_websocket.const import DOMAIN
 
-from .conftest import MOCK_CONFIG, MOCK_HOST, MOCK_PASSWORD, MOCK_PORT
+from .conftest import MOCK_CONFIG, MOCK_HOST, MOCK_NEW_PASSWORD, MOCK_PASSWORD, MOCK_PORT, MOCK_WRONG_PASSWORD
 
 
 async def test_user_flow_shows_form(hass: HomeAssistant) -> None:
@@ -85,13 +85,13 @@ async def test_reauth_flow_success(hass: HomeAssistant, mock_config_entry: MockC
     ) as mock_test:
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"],
-            user_input={"password": "newpass"},
+            user_input={"password": MOCK_NEW_PASSWORD},
         )
 
     assert result["type"] is FlowResultType.ABORT
     assert result["reason"] == "reauth_successful"
-    assert mock_config_entry.data["password"] == "newpass"
-    mock_test.assert_called_once_with(hass, MOCK_HOST, MOCK_PORT, "newpass")
+    assert mock_config_entry.data["password"] == MOCK_NEW_PASSWORD
+    mock_test.assert_called_once_with(hass, MOCK_HOST, MOCK_PORT, MOCK_NEW_PASSWORD)
 
 
 async def test_reauth_flow_cannot_connect(hass: HomeAssistant, mock_config_entry: MockConfigEntry) -> None:
@@ -104,7 +104,7 @@ async def test_reauth_flow_cannot_connect(hass: HomeAssistant, mock_config_entry
     ):
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"],
-            user_input={"password": "wrongpass"},
+            user_input={"password": MOCK_WRONG_PASSWORD},
         )
 
     assert result["type"] is FlowResultType.FORM
@@ -117,7 +117,7 @@ async def test_reconfigure_flow_success(hass: HomeAssistant, mock_config_entry: 
     assert result["type"] is FlowResultType.FORM
     assert result["step_id"] == "reconfigure"
 
-    new_config = {"host": "10.0.0.50", "port": 4456, "password": "newpass"}
+    new_config = {"host": "10.0.0.50", "port": 4456, "password": MOCK_NEW_PASSWORD}
 
     with patch(
         "custom_components.obs_websocket.config_flow._test_connection",
@@ -131,8 +131,8 @@ async def test_reconfigure_flow_success(hass: HomeAssistant, mock_config_entry: 
     assert result["reason"] == "reconfigure_successful"
     assert mock_config_entry.data["host"] == "10.0.0.50"
     assert mock_config_entry.data["port"] == 4456
-    assert mock_config_entry.data["password"] == "newpass"
-    mock_test.assert_called_once_with(hass, "10.0.0.50", 4456, "newpass")
+    assert mock_config_entry.data["password"] == MOCK_NEW_PASSWORD
+    mock_test.assert_called_once_with(hass, "10.0.0.50", 4456, MOCK_NEW_PASSWORD)
 
 
 async def test_reconfigure_flow_cannot_connect(hass: HomeAssistant, mock_config_entry: MockConfigEntry) -> None:
