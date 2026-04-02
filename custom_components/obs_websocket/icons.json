@@ -12,6 +12,14 @@
       "stream_service": {
         "default": "mdi:cog-play"
       }
+    },
+    "button": {
+      "start_stream": {
+        "default": "mdi:play"
+      },
+      "stop_stream": {
+        "default": "mdi:stop"
+      }
     }
   }
 }

@@ -4,7 +4,7 @@
 
 [OBS Studio](https://obsproject.com/) is a free, open-source application for video recording and live streaming. It is widely used by content creators, gamers, and professionals for streaming to platforms such as Twitch, YouTube, and Facebook Live.
 
-This custom Home Assistant integration connects to OBS Studio via the [WebSocket v5 protocol](https://github.com/obsproject/obs-websocket), exposing real-time stream status and service configuration as sensors. It uses a persistent connection with event-driven updates for near-instant state changes.
+This custom Home Assistant integration connects to OBS Studio via the [WebSocket v5 protocol](https://github.com/obsproject/obs-websocket), exposing real-time stream status and service configuration as sensors, along with buttons to start and stop streaming. It uses a persistent connection with event-driven updates for near-instant state changes.
 
 ## Requirements
 
@@ -31,6 +31,7 @@ This custom Home Assistant integration connects to OBS Studio via the [WebSocket
    custom_components/
    └── obs_websocket/
        ├── __init__.py
+       ├── button.py
        ├── config_flow.py
        ├── const.py
        ├── icons.json
@@ -98,6 +99,16 @@ Reports the configured streaming service. State is the service type (e.g. `rtmp_
 | Attribute | Description |
 |-----------|-------------|
 | `stream_service_settings` | Dict containing `server`, `key`, and other service-specific fields |
+
+### Buttons
+
+#### Start Stream
+
+Press to start streaming in OBS. Raises an error if OBS is unreachable or the stream cannot be started (e.g. already streaming).
+
+#### Stop Stream
+
+Press to stop streaming in OBS. Raises an error if OBS is unreachable or the stream cannot be stopped (e.g. not currently streaming).
 
 ## Configuration
 
@@ -174,7 +185,6 @@ automation:
 
 ## Known Limitations
 
-- **Read-only** - This integration monitors OBS but does not control it (no start/stop stream actions).
 - **Synchronous library** - The underlying `obsws-python` library uses threads rather than asyncio, so all calls are wrapped with `async_add_executor_job`.
 - **Single stream output** - Only the primary stream output is monitored. Recording status and virtual cam status are not currently tracked.
 - **No auto-discovery** - You must manually enter the OBS host and port; the integration cannot discover OBS instances on the network.
