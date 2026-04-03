@@ -1,26 +1,26 @@
 name: SonarCloud
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_run:
+    workflows: [Tests]
+    types: [completed]
 
 jobs:
   sonarcloud:
+    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
+          repository: ${{ github.event.workflow_run.head_repository.full_name }}
+          ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v4
         with:
-          python-version: "3.12"
-      - name: Install dependencies
-        run: pip install pytest pytest-asyncio pytest-cov pytest-homeassistant-custom-component obsws-python==1.8.0
-      - name: Run tests with coverage
-        run: pytest --cov=custom_components.obs_websocket --cov-report=xml tests/
-        continue-on-error: true
-      - uses: SonarSource/sonarqube-scan-action@v5
+          name: coverage
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
