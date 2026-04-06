@@ -92,6 +92,14 @@ class OBSConnection:
 
         return await self.hass.async_add_executor_job(_fetch)
 
+    async def async_start_stream(self) -> None:
+        """Start streaming in OBS."""
+        await self.hass.async_add_executor_job(self._req_client.start_stream)
+
+    async def async_stop_stream(self) -> None:
+        """Stop streaming in OBS."""
+        await self.hass.async_add_executor_job(self._req_client.stop_stream)
+
     async def async_disconnect(self) -> None:
         """Disconnect both clients."""
 

@@ -53,6 +53,12 @@
     },
     "communication_error": {
       "message": "Error communicating with OBS WebSocket at {host}: {error}"
+    },
+    "start_stream_failed": {
+      "message": "Failed to start streaming on OBS at {host}: {error}"
+    },
+    "stop_stream_failed": {
+      "message": "Failed to stop streaming on OBS at {host}: {error}"
     }
   },
   "entity": {
@@ -67,6 +73,14 @@
       },
       "stream_service": {
         "name": "Stream service"
+      }
+    },
+    "button": {
+      "start_stream": {
+        "name": "Start stream"
+      },
+      "stop_stream": {
+        "name": "Stop stream"
       }
     }
   }
